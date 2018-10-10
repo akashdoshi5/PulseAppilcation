@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     Button login;
-    EditText editText;
+    EditText racfID;
+    EditText response;
     public static final String PREFS_NAME = "PulseTeam";
     Gson gson = new Gson();
     ExcelDetail selectedExcelDetail;
@@ -43,21 +44,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, 0 );
-        sharedPreferences.getInt("sheetNumber", 0);
-
+        final String excelName = getString(R.string.ExcelName);
+        sharedPreferences.getInt("sheetNumber"+excelName, 0);
 
         button = findViewById(R.id.button);
         login = findViewById(R.id.button3);
-        editText = findViewById(R.id.editText);
+        racfID = findViewById(R.id.editText);
+        response = findViewById(R.id.editText2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String selectedObject = sharedPreferences.getString("selected", null);
+                final String selectedObject = sharedPreferences.getString("selectedFrom"+excelName, null);
                 if(selectedObject != null ) {
-                    selectedExcelDetail = gson.fromJson(selectedObject, ExcelDetail.class);
-                    readExcelFile(MainActivity.this, "Test1.xls");
+                    if(!racfID.getText().toString().trim().equals("")) {
+                        if(!response.getText().toString().trim().equals("")) {
+                            selectedExcelDetail = gson.fromJson(selectedObject, ExcelDetail.class);
+                            readExcelFile(MainActivity.this, excelName);
+                            Toast.makeText(MainActivity.this, "Data Inserted! Racf id: "+racfID.getText().toString().trim()+", Response: "+response.getText().toString().trim() , Toast.LENGTH_SHORT).show();
+                            racfID.setText("");
+                            response.setText("");
+                        }else{
+                            Toast.makeText(MainActivity.this, "Response Cannot be Empty!", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(MainActivity.this, "Please Insert Racf Id!", Toast.LENGTH_SHORT).show();
+                    }
                 } else  {
-                    Toast.makeText(MainActivity.this, "Please insert question", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "There is no question present to answer! Pulse Team Members needs to Login and add a Question!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -144,10 +157,10 @@ public class MainActivity extends AppCompatActivity {
             Row row = mySheet.createRow(++rowNum);
 
             Cell c = row.createCell(0);
-            c.setCellValue("Akash");
+            c.setCellValue(racfID.getText().toString().trim());
 
             c = row.createCell(1);
-            c.setCellValue("Yes");
+            c.setCellValue(response.getText().toString().trim());
 
 
             FileOutputStream os = null;

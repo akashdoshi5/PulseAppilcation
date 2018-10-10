@@ -14,4 +14,5 @@
         completions."
     </string>
     <string name="title_activity_questions_main">QuestionsMainActivity</string>
+    <string name="ExcelName">PulseQueAns.xls</string>
 </resources>

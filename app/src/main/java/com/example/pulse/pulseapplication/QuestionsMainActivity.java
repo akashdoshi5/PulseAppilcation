@@ -58,19 +58,22 @@ public class QuestionsMainActivity extends AppCompatActivity {
         question = findViewById(R.id.question);
         insert = findViewById(R.id.insert);
         select = findViewById(R.id.select);
+        final String excelName = getString(R.string.ExcelName);
         final SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, 0);
         insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!question.getText().toString().trim().equals("")) {
-                    i = sharedPreferences.getInt("sheetNumber", 0);
+                    i = sharedPreferences.getInt("sheetNumber"+excelName, 0);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("sheetNumber", ++i);
-                    insertInList(editor, sharedPreferences);
+                    editor.putInt("sheetNumber"+excelName, ++i);
+                    insertInList(editor, sharedPreferences, excelName);
                     editor.commit();
-                    readExcelFile(QuestionsMainActivity.this, "Test1.xls");
+                    readExcelFile(QuestionsMainActivity.this, "PulseQueAns.xls", excelName);
+                    Toast.makeText(QuestionsMainActivity.this, "Question Added Successfully!", Toast.LENGTH_SHORT).show();
+                    question.setText("");
                 } else {
-                    Toast.makeText(QuestionsMainActivity.this, "Please insert question", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QuestionsMainActivity.this, "Please insert a Question!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -82,7 +85,7 @@ public class QuestionsMainActivity extends AppCompatActivity {
         excelDetails = gson.fromJson(json, type);
         if (excelDetails == null) {
             excelDetails = new ArrayList<>();
-            excelDetails.add(createExcelSheet("Please select Question", "Sheet0"));
+            excelDetails.add(createExcelSheet("Please Select Question!", excelName+"0"));
         }
 
         loadDropDownList();
@@ -92,16 +95,16 @@ public class QuestionsMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 {
                     detail = (ExcelDetail) spinner.getSelectedItem();
-                    if (!detail.getSheetName().equals("Sheet0")) {
+                    if (!detail.getSheetName().equals(excelName+"0")) {
                         Toast.makeText(QuestionsMainActivity.this, "Selected Item  " + detail.getSheetName(), Toast.LENGTH_SHORT).show();
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         String selected = gson.toJson(detail);
-                        editor.putString("selected", selected);
-                        insertInList(editor, sharedPreferences);
+                        editor.putString("selectedFrom"+excelName, selected);
+                        /*insertInList(editor, sharedPreferences,excelName);*/
                         spinner.setSelection(dataAdapter.getPosition(detail));
                         editor.commit();
                     } else {
-                        Toast.makeText(QuestionsMainActivity.this, "Please select question", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(QuestionsMainActivity.this, "Please select Question!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -115,9 +118,9 @@ public class QuestionsMainActivity extends AppCompatActivity {
         spinner.setAdapter(dataAdapter);
     }
 
-    void insertInList(SharedPreferences.Editor editor, SharedPreferences sharedPreferences) {
+    void insertInList(SharedPreferences.Editor editor, SharedPreferences sharedPreferences, String excelName) {
         json = sharedPreferences.getString("List", null);
-        excelDetails.add(createExcelSheet(question.getText().toString(), "Sheet" + i));
+        excelDetails.add(createExcelSheet(question.getText().toString(), excelName + i));
         editor.putString("List", gson.toJson(excelDetails));
 
         loadDropDownList();
@@ -130,7 +133,7 @@ public class QuestionsMainActivity extends AppCompatActivity {
         return excelDetail;
     }
 
-    private void readExcelFile(Context context, String filename) {
+    private void readExcelFile(Context context, String filename, String excelName) {
 
         if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
             Log.e("LOG", "Storage not available or read only");
@@ -145,7 +148,7 @@ public class QuestionsMainActivity extends AppCompatActivity {
 
             HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
 
-            Sheet sheet1 = myWorkBook.createSheet("Sheet" + i);
+            Sheet sheet1 = myWorkBook.createSheet(excelName + i);
 
             Row row1 = sheet1.createRow(0);
             Cell c1 = row1.createCell(0);
@@ -183,14 +186,14 @@ public class QuestionsMainActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
-            saveExcelFile(context, filename);
+            saveExcelFile(context, filename,excelName);
         }
 
         return;
     }
 
 
-    private boolean saveExcelFile(Context context, String fileName) {
+    private boolean saveExcelFile(Context context, String fileName , String excelName) {
 
         if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
             Log.e("LOG", "Storage not available or read only");
@@ -201,7 +204,7 @@ public class QuestionsMainActivity extends AppCompatActivity {
 
         Workbook wb = new HSSFWorkbook();
 
-        Sheet sheet1 = wb.createSheet("Sheet" + i);
+        Sheet sheet1 = wb.createSheet(excelName + i);
 
         Row row1 = sheet1.createRow(0);
         Cell c1 = row1.createCell(0);

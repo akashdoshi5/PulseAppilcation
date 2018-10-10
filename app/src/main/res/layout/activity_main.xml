@@ -10,21 +10,35 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button3"
-        android:layout_alignLeft="@+id/button3"
-        android:layout_alignStart="@+id/button3"
-        android:layout_marginBottom="79dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="174dp"
         android:text="Submit"
         tools:layout_editor_absoluteX="74dp"
         tools:layout_editor_absoluteY="141dp" />
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="wrap_content"
+        android:layout_width="165dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="57dp"
+        android:layout_marginRight="57dp"
+        android:layout_marginTop="29dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="52dp" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="164dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
+        android:layout_alignStart="@+id/editText"
+        android:layout_marginTop="115dp"
         android:ems="10"
         android:inputType="textPersonName"
         tools:layout_editor_absoluteX="85dp"
@@ -34,10 +48,33 @@
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Login"
+        android:layout_marginBottom="18dp"
+        android:text="Login As Pulse"
         tools:layout_editor_absoluteX="230dp"
         tools:layout_editor_absoluteY="141dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editText2"
+        android:layout_alignStart="@+id/textView4"
+        android:text="Response : "
+        android:textSize="20dp"
+        android:layout_alignLeft="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/editText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="57dp"
+        android:layout_marginStart="57dp"
+        android:textSize="20dp"
+        android:text=" Racf ID : " />
 
 </RelativeLayout>
