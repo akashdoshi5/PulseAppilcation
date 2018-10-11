@@ -6,13 +6,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -27,6 +30,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +42,15 @@ public class MainActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "PulseTeam";
     Gson gson = new Gson();
     ExcelDetail selectedExcelDetail;
+    TextView textView;
+
+    @Override
+    protected void onStart() {
+        final SharedPreferences sharedPreferences = getSharedPreferences(PREFS_NAME, 0 );
+        super.onStart();
+        final String excelName = getString(R.string.ExcelName);
+        setQuestionName(sharedPreferences, excelName);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.button3);
         racfID = findViewById(R.id.editText);
         response = findViewById(R.id.editText2);
+        textView =  findViewById(R.id.questionText);
+
+    //    setQuestionName(sharedPreferences, excelName);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +100,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void setQuestionName(SharedPreferences sharedPreferences, String excelName) {
+        String selectedObject1 = sharedPreferences.getString("selectedFrom"+excelName, null);
+        Gson gson=new Gson();;
+        ExcelDetail excelDetail;
+        Type type;
+        type = new TypeToken<ExcelDetail>() {
+        }.getType();
+        excelDetail = gson.fromJson(selectedObject1, type);
+        if(selectedObject1 != null ) {
+            textView.setText("Question : "+ excelDetail.getQuestion());
+        }else{
+            textView.setText("No Question Available!");
+        }
     }
 
     private static boolean saveExcelFile(Context context, String fileName) {

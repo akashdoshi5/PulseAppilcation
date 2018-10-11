@@ -6,44 +6,83 @@
     android:layout_height="match_parent"
     tools:context="com.example.pulse.pulseapplication.MainActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="174dp"
-        android:text="Submit"
-        tools:layout_editor_absoluteX="74dp"
-        tools:layout_editor_absoluteY="141dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:background="@drawable/background_gradiant"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+        <!--#367c2b android:background="@drawable/background_gradiant"-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_gradiant2" />
+        <!--yellow #ffde00  gray #88e0e0e0-->
+    </LinearLayout>
 
-    <EditText
+
+
+
+
+
+    <LinearLayout
+        android:id="@+id/layoutInput"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="25dp"
+        android:background="#FFF"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
         android:id="@+id/editText"
-        android:layout_width="165dp"
+        android:textAlignment="center"
+        android:hint="Please enter your Racf Id"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="57dp"
-        android:layout_marginRight="57dp"
-        android:layout_marginTop="29dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="52dp" />
+        android:padding="10dp"
+        android:singleLine="true"
+        android:maxLength="7" />
 
     <EditText
         android:id="@+id/editText2"
-        android:layout_width="164dp"
+        android:textAlignment="center"
+        android:hint="Please enter your Response"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/editText"
-        android:layout_marginTop="115dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="85dp"
-        tools:layout_editor_absoluteY="52dp" />
+        android:padding="10dp"
+        android:singleLine="true"
+         />
+    <Button
+        android:id="@+id/button"
 
+        android:text="Submit"
+        android:textColor="#000"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:height="48dp"
+        android:width="100dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_above="@id/layoutInput"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFF"
+        android:textSize="25dp"
+        android:text=""
+        android:layout_marginBottom="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
@@ -54,27 +93,4 @@
         android:text="Login As Pulse"
         tools:layout_editor_absoluteX="230dp"
         tools:layout_editor_absoluteY="141dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/editText2"
-        android:layout_alignStart="@+id/textView4"
-        android:text="Response : "
-        android:textSize="20dp"
-        android:layout_alignLeft="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/editText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="57dp"
-        android:layout_marginStart="57dp"
-        android:textSize="20dp"
-        android:text=" Racf ID : " />
-
 </RelativeLayout>

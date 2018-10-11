@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="cardview_shadow_start_color">#37000000</color>
+    <color name="colorGreen">#367c2b</color>
 </resources>
