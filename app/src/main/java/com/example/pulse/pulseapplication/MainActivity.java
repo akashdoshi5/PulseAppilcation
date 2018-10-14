@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,17 +35,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     Button button;
-    Button login;
     EditText racfID;
-    EditText response;
     public static final String PREFS_NAME = "PulseTeam";
     Gson gson = new Gson();
     ExcelDetail selectedExcelDetail;
     TextView textView;
+    Spinner spinner;
 
     @Override
     protected void onStart() {
@@ -62,12 +65,19 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences.getInt("sheetNumber"+excelName, 0);
 
         button = findViewById(R.id.button);
-        login = findViewById(R.id.button3);
         racfID = findViewById(R.id.editText);
-        response = findViewById(R.id.editText2);
         textView =  findViewById(R.id.questionText);
 
-    //    setQuestionName(sharedPreferences, excelName);
+        spinner = findViewById(R.id.loginSpinner);
+        List<String> domains = new ArrayList<>();
+        domains.add("Please select your Response!");
+        domains.add("Agree");
+        domains.add("Disagree");
+
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, domains);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,14 +85,14 @@ public class MainActivity extends AppCompatActivity {
                 final String selectedObject = sharedPreferences.getString("selectedFrom"+excelName, null);
                 if(selectedObject != null ) {
                     if(!racfID.getText().toString().trim().equals("")) {
-                        if(!response.getText().toString().trim().equals("")) {
+                        if(!spinner.getSelectedItem().equals("Please select your Response!")) {
                             selectedExcelDetail = gson.fromJson(selectedObject, ExcelDetail.class);
                             readExcelFile(MainActivity.this, excelName);
-                            Toast.makeText(MainActivity.this, "Data Inserted! Racf id: "+racfID.getText().toString().trim()+", Response: "+response.getText().toString().trim() , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Data Inserted! Racf id: "+racfID.getText().toString().trim()+", Response: "+spinner.getSelectedItem().toString().trim() , Toast.LENGTH_SHORT).show();
                             racfID.setText("");
-                            response.setText("");
+                            spinner.setAdapter(dataAdapter);
                         }else{
-                            Toast.makeText(MainActivity.this, "Response Cannot be Empty!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Please select Response from Dropdown!", Toast.LENGTH_SHORT).show();
                         }
                     }else{
                         Toast.makeText(MainActivity.this, "Please Insert Racf Id!", Toast.LENGTH_SHORT).show();
@@ -90,14 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 } else  {
                     Toast.makeText(MainActivity.this, "There is no question present to answer! Pulse Team Members needs to Login and add a Question!", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, PulseLoginActivity.class);
-                startActivity(intent);
             }
         });
     }
@@ -117,6 +119,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(MainActivity.this, PulseLoginActivity.class);
+        startActivity(intent);
+        return super.onOptionsItemSelected(item);
+    }
     private static boolean saveExcelFile(Context context, String fileName) {
 
         if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
@@ -193,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             c.setCellValue(racfID.getText().toString().trim());
 
             c = row.createCell(1);
-            c.setCellValue(response.getText().toString().trim());
+            c.setCellValue(spinner.getSelectedItem().toString().trim());
 
 
             FileOutputStream os = null;
