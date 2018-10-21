@@ -41,15 +41,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
-        android:id="@+id/editText"
-        android:textAlignment="center"
-        android:hint="Please enter your Racf Id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:singleLine="true"
-        android:maxLength="7" />
+        <AutoCompleteTextView
+            android:id="@+id/editText"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:maxLength="7"
+            android:hint="Please enter your Racf Id" />
 
         <Spinner
             android:id="@+id/loginSpinner"
@@ -74,14 +74,16 @@
 
     <TextView
         android:id="@+id/questionText"
-        android:layout_above="@id/layoutInput"
-        android:layout_centerHorizontal="true"
-        android:textColor="#FFF"
-        android:textSize="25dp"
-        android:text=""
-        android:layout_marginBottom="30dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text=""
+        android:textColor="#FFF"
+        android:textSize="25dp" />
   <!--  <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"

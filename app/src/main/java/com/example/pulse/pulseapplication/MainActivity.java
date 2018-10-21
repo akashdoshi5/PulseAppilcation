@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -40,12 +44,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Button button;
-    EditText racfID;
+    AutoCompleteTextView autoCompleteTextView;
     public static final String PREFS_NAME = "PulseTeam";
     Gson gson = new Gson();
     ExcelDetail selectedExcelDetail;
     TextView textView;
     Spinner spinner;
+    String racfId="";
 
     @Override
     protected void onStart() {
@@ -64,9 +69,29 @@ public class MainActivity extends AppCompatActivity {
         final String excelName = getString(R.string.ExcelName);
         sharedPreferences.getInt("sheetNumber"+excelName, 0);
 
+
         button = findViewById(R.id.button);
-        racfID = findViewById(R.id.editText);
+        autoCompleteTextView = (AutoCompleteTextView)findViewById(R.id.editText);
         textView =  findViewById(R.id.questionText);
+
+        //set Suggestions
+        String items[] = getResources().getStringArray(R.array.suggest_items);
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < items.length; i++) {
+            list.add(items[i]);
+        }
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                MainActivity.this, android.R.layout.simple_list_item_1, list);
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.setThreshold(1);
+
+
+        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                racfId = adapter.getItem(position).toString();
+            }
+        });
 
         spinner = findViewById(R.id.loginSpinner);
         List<String> domains = new ArrayList<>();
@@ -79,23 +104,50 @@ public class MainActivity extends AppCompatActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
 
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {   }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                racfId="";
+                //autoCompleteTextView.setText("");
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String selectedObject = sharedPreferences.getString("selectedFrom"+excelName, null);
                 if(selectedObject != null ) {
-                    if(!racfID.getText().toString().trim().equals("")) {
+                    if(!racfId.toString().trim().equals("")) {
                         if(!spinner.getSelectedItem().equals("Please select your Response!")) {
                             selectedExcelDetail = gson.fromJson(selectedObject, ExcelDetail.class);
                             readExcelFile(MainActivity.this, excelName);
-                            Toast.makeText(MainActivity.this, "Data Inserted! Racf id: "+racfID.getText().toString().trim()+", Response: "+spinner.getSelectedItem().toString().trim() , Toast.LENGTH_SHORT).show();
-                            racfID.setText("");
+                            Toast.makeText(MainActivity.this, "Data Inserted! Racf id: "+autoCompleteTextView.getText().toString().trim()+", Response: "+spinner.getSelectedItem().toString().trim() , Toast.LENGTH_SHORT).show();
+                            autoCompleteTextView.setText("");
                             spinner.setAdapter(dataAdapter);
+                            racfId = "";
                         }else{
                             Toast.makeText(MainActivity.this, "Please select Response from Dropdown!", Toast.LENGTH_SHORT).show();
                         }
-                    }else{
-                        Toast.makeText(MainActivity.this, "Please Insert Racf Id!", Toast.LENGTH_SHORT).show();
+                    }else {
+                        if (!autoCompleteTextView.getText().toString().trim().equals("")){
+                            Toast.makeText(MainActivity.this, "Please Enter Valid Racf Id!", Toast.LENGTH_SHORT).show();
+                            //autoCompleteTextView.setText("");
+                            //spinner.setAdapter(dataAdapter);
+                            racfId = "";
+                        }else{
+                            Toast.makeText(MainActivity.this, "Please Insert Racf Id!", Toast.LENGTH_SHORT).show();
+                            autoCompleteTextView.setText("");
+                            spinner.setAdapter(dataAdapter);
+                            racfId = "";
+                        }
                     }
                 } else  {
                     Toast.makeText(MainActivity.this, "There is no question present to answer! Pulse Team Members needs to Login and add a Question!", Toast.LENGTH_SHORT).show();
@@ -103,6 +155,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+    void setSuggestions() {
+
+     }
+
 
     private void setQuestionName(SharedPreferences sharedPreferences, String excelName) {
         String selectedObject1 = sharedPreferences.getString("selectedFrom"+excelName, null);
@@ -205,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
             Row row = mySheet.createRow(++rowNum);
 
             Cell c = row.createCell(0);
-            c.setCellValue(racfID.getText().toString().trim());
+            c.setCellValue(autoCompleteTextView.getText().toString().trim());
 
             c = row.createCell(1);
             c.setCellValue(spinner.getSelectedItem().toString().trim());
