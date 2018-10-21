@@ -16,11 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.androidadvance.topsnackbar.TSnackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -111,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 racfId="";
-                //autoCompleteTextView.setText("");
             }
             @Override
             public void afterTextChanged(Editable editable) {
@@ -129,39 +127,30 @@ public class MainActivity extends AppCompatActivity {
                         if(!spinner.getSelectedItem().equals("Please select your Response!")) {
                             selectedExcelDetail = gson.fromJson(selectedObject, ExcelDetail.class);
                             readExcelFile(MainActivity.this, excelName);
-                            Toast.makeText(MainActivity.this, "Data Inserted! Racf id: "+autoCompleteTextView.getText().toString().trim()+", Response: "+spinner.getSelectedItem().toString().trim() , Toast.LENGTH_SHORT).show();
+                            TSnackbar.make(v,"Data Inserted! Racf id: "+autoCompleteTextView.getText().toString().trim()+", Response: "+spinner.getSelectedItem().toString().trim(),TSnackbar.LENGTH_SHORT).show();
                             autoCompleteTextView.setText("");
                             spinner.setAdapter(dataAdapter);
                             racfId = "";
                         }else{
-                            Toast.makeText(MainActivity.this, "Please select Response from Dropdown!", Toast.LENGTH_SHORT).show();
+                            TSnackbar.make(v,"Please select Response from Dropdown!",TSnackbar.LENGTH_SHORT).show();
                         }
                     }else {
                         if (!autoCompleteTextView.getText().toString().trim().equals("")){
-                            Toast.makeText(MainActivity.this, "Please Enter Valid Racf Id!", Toast.LENGTH_SHORT).show();
-                            //autoCompleteTextView.setText("");
-                            //spinner.setAdapter(dataAdapter);
+                            TSnackbar.make(v,"Please Enter Valid Racf Id!",TSnackbar.LENGTH_SHORT).show();
                             racfId = "";
                         }else{
-                            Toast.makeText(MainActivity.this, "Please Insert Racf Id!", Toast.LENGTH_SHORT).show();
+                            TSnackbar.make(v,"Please Insert Racf Id!",TSnackbar.LENGTH_SHORT).show();
                             autoCompleteTextView.setText("");
                             spinner.setAdapter(dataAdapter);
                             racfId = "";
                         }
                     }
                 } else  {
-                    Toast.makeText(MainActivity.this, "There is no question present to answer! Pulse Team Members needs to Login and add a Question!", Toast.LENGTH_SHORT).show();
+                    TSnackbar.make(v,"There is no question present to answer! Pulse Team Members needs to Login and add a Question!",TSnackbar.LENGTH_SHORT).show();
                 }
             }
         });
     }
-
-
-
-    void setSuggestions() {
-
-     }
-
 
     private void setQuestionName(SharedPreferences sharedPreferences, String excelName) {
         String selectedObject1 = sharedPreferences.getString("selectedFrom"+excelName, null);

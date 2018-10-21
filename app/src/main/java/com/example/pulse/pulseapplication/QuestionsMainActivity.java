@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.androidadvance.topsnackbar.TSnackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -70,10 +70,10 @@ public class QuestionsMainActivity extends AppCompatActivity {
                     insertInList(editor, sharedPreferences, excelName);
                     editor.commit();
                     readExcelFile(QuestionsMainActivity.this, "PulseQueAns.xls", excelName);
-                    Toast.makeText(QuestionsMainActivity.this, "Question Added Successfully!", Toast.LENGTH_SHORT).show();
+                    TSnackbar.make(v,"Question Added Successfully!",TSnackbar.LENGTH_SHORT).show();
                     question.setText("");
                 } else {
-                    Toast.makeText(QuestionsMainActivity.this, "Please insert a Question!", Toast.LENGTH_SHORT).show();
+                    TSnackbar.make(v,"Please insert a Question!",TSnackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -96,7 +96,7 @@ public class QuestionsMainActivity extends AppCompatActivity {
                 {
                     detail = (ExcelDetail) spinner.getSelectedItem();
                     if (!detail.getSheetName().equals(excelName+"0")) {
-                        Toast.makeText(QuestionsMainActivity.this, "Selected Item  " + detail.getSheetName(), Toast.LENGTH_SHORT).show();
+                        TSnackbar.make(v,"Selected Item  " + detail.getSheetName(),TSnackbar.LENGTH_SHORT).show();
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         String selected = gson.toJson(detail);
                         editor.putString("selectedFrom"+excelName, selected);
@@ -104,7 +104,7 @@ public class QuestionsMainActivity extends AppCompatActivity {
                         spinner.setSelection(dataAdapter.getPosition(detail));
                         editor.commit();
                     } else {
-                        Toast.makeText(QuestionsMainActivity.this, "Please select Question!", Toast.LENGTH_SHORT).show();
+                        TSnackbar.make(v,"Please select Question!",TSnackbar.LENGTH_SHORT).show();
                     }
                 }
             }
